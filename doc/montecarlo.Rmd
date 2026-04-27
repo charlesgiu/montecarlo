@@ -1,48 +1,66 @@
 ---
-title: "R Notebook"
+title: "Investigating Techniques of Monte Carlo Integration"
+author: "Charles Giulian"
 output:
-  html_notebook: default
   pdf_document: default
+  html_notebook: default
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
+# I. Background
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
+
+# II. Uniform Monte Carlo Integration
+```{r}
+# Setup ggplot
+library(ggplot2)
+theme_update(plot.title = element_text(hjust = 0.5))
+theme_update(plot.subtitle = element_text(hjust = 0.5))
+```
+
 
 ```{r}
-install.packages("ggplot2")
+# Compute estimation
+f <- function(x) x^2
+a <- 0
+b <- 10
+N <- 50000
+x <- seq(a, b, length.out = N)
+y <- f(x)
+
+x_min = min(x)
+y_min = min(y)
+x_max = max(x)
+y_max = max(y)
+
+in_points <- c()
+out_points <- c()
+
+for (i in 1:N) {
+  rand_point = c(runif(1, min = x_min, max = x_max), runif(1, min = y_min, max = y_max))
+  if (rand_point[2] < f(rand_point[1])) {
+    in_points <- rbind(in_points, rand_point)
+  } else {
+    out_points <- rbind(out_points, rand_point)
+  }
+}
+
+V = (y_max - y_min) * (x_max - x_min)
+I = length(in_points) / N * V
 ```
 
 ```{r}
-library(ggplot2)
-f <- function(x) x^2
-x_values <- seq(1, 10, 0.5)
-y_values <- x_values^3
-N <- 500
+# Plot results
+function_points <- data.frame(x = x, y = y)
+in_data <- data.frame(x = in_points[, 1], y = in_points[, 2])
+out_data <- data.frame(x = out_points[, 1], y = out_points[, 2])
 
-
-x_min = min(x_values)
-y_min = min(y_values)
-x_max = max(x_values)
-y_max = max(y_values)
-
-x_scatter = runif(N, min = x_min, max = x_max)
-y_scatter = runif(N, min = y_min, max = y_max)
-
-data <- data.frame(x = x_values, y = y_values)
-scatter <- data.frame(x_scatter = x_scatter, y_scatter = y_scatter)
-
-ggplot(data) +
+ggplot(function_points) +
   geom_vline(aes(xintercept = x_min), color = "blue", linetype = "dashed") +
   geom_hline(aes(yintercept = y_min), color = "blue", linetype = "dashed") +
   geom_vline(aes(xintercept = x_max), color = "red", linetype = "dashed") +
   geom_hline(aes(yintercept = y_max), color = "red", linetype = "dashed") +
-  geom_line(aes(x = x, y = y), color = "green") +
-  geom_point(data = scatter, aes(x = x_scatter, y = y_scatter), size = 1)
+  geom_point(data = in_data, aes(x = x, y = y), size = 0.5, color = "green") +
+  geom_point(data = out_data, aes(x = x, y = y), size = 0.5, color = "blue") +
+  geom_line(aes(x = x, y = y), linewidth = 1.0, color = "black") +
+  ggtitle("Uniform Monte Carlo Estimation for x^2 on [0,10]", subtitle = "n = 50000")
 ```
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
