@@ -16,7 +16,7 @@ where $S$, a subset of $\mathbb{R}^m$ has volume: $$V = \int_{S} d\vec{x}$$
 
 $I$ has the approximation: $$I \approx A = V\frac{1}{N}\sum_{i=1}^Nf(\vec{x_i})$$
 
-And by the law of large numbers: $$\lim_{N\to\infty} E = I$$
+And by the law of large numbers: $$\lim_{N\to\infty} A = I$$
 
 # II. Uniform Monte Carlo Integration
 
@@ -48,7 +48,7 @@ V <- (b - a) * y_max
 I <- (sum(df$status == "in") / N) * V
 
 ggplot(df, aes(x, y)) +
-  geom_point(aes(color = status), size = 0.5, alpha = 0.4) +
+  geom_point(aes(color = status), size = 0.5, alpha = 1, shape = ".") +
   stat_function(fun = f, color = "black", linewidth = 1) +
   scale_color_manual(values = c("in" = "green", "out" = "blue")) +
   labs(title = "Uniform Monte Carlo Estimation for exp(-x^2) on [-5, 5]", subtitle = paste("n = ", N))
@@ -88,7 +88,7 @@ weights <- f(df$x) / g_pdf(df$x)
 integral_estimate <- mean(weights)
 
 ggplot(df, aes(x, y)) +
-  geom_point(aes(color = status), size = 0.5, alpha = 0.4) +
+  geom_point(aes(color = status), size = 0.5, alpha = 0.5, shape = ".") +
   stat_function(fun = f, color = "black", linewidth = 1) +
   scale_color_manual(values = c("in" = "green", "out" = "blue"))
 ```
