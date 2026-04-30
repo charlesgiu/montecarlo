@@ -98,3 +98,5 @@ ggplot(df, aes(x, y)) +
 Press, William H., et al. Numerical Recipes: The Art of Scientific Computing. 3 ed., Cambridge University Press, 2007.
 
 Lepage, G. Peter. "A New Algorithm for Adaptive Multidimensional Integration." Journal of Computational Physics, vol. 27, no. 2, 1978, pp. 192-203. ScienceDirect, [https://doi.org/10.1016/0021-9991(78)90004-9](https://doi.org/10.1016/0021-9991(78)90004-9){.uri}.
+
+“Monte Carlo integration.” Wikipedia, <https://en.wikipedia.org/wiki/Monte_Carlo_integration>.
